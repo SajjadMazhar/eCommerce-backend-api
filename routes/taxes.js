@@ -17,5 +17,14 @@ router.get("/", (req, res)=>{
     })
 })
 
-router.get("")
+router.get("/:tax_id", (req, res)=>{
+    knex("tax").where({tax_id:req.params.tax_id})
+    .then(data =>{
+        res.send(data[0])
+    }).catch(err=>{
+        console.log(err.message);
+        res.send("error")
+    })
+})
+
 module.exports = router;
