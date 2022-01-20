@@ -2,6 +2,7 @@ const express = require("express");
 const { verifyToken, createToken } = require("../auth/jwt_auth");
 const router = express.Router()
 const knex = require("../config/db")
+const passport = require("passport")
 
 router.put("/", verifyToken, (req, res)=>{
     knex("customer").where({customer_id:req.data.customer_id})
@@ -96,7 +97,15 @@ router.put("/address", verifyToken, (req, res)=>{
     })
 })
 
-// login with facebook route remains
+router.get("/google", passport.authenticate("google", {
+    scope:["profile"]
+}))
+
+//callback route for google to redirect to
+router.get("/auth/google/redirect",passport.authenticate("google"), (req, res)=>{
+    // res.send(req.user)
+    res.send("logged in with google")
+})
 
 router.put("/creditCard",verifyToken, (req, res)=>{
     knex("customer").where({customer_id:req.data.customer_id})

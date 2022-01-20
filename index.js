@@ -11,11 +11,23 @@ const shoppingKartRoute = require("./routes/shoppingKart")
 const taxRoute = require("./routes/taxes");
 const shippingRoute = require("./routes/shipping");
 const stripeRoute = require("./routes/stripe")
+const passport= require("passport")
+const passportSetup = require("./config/passport-setup")
+const cookieSession = require("cookie-session")
+
 const port = process.env.PORT || 4545
 
 app.use(express.json())
-app.use("/categories", categorieRoute);
-app.use("/attributes", attributeRoute);
+
+app.use(cookieSession({
+    maxAge:24*60*60*1000,
+    keys:[process.env.COOKIE_KEY]
+}))
+
+//initialize passport
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // All routes here
 app.use("/departments", departmentRoute);
